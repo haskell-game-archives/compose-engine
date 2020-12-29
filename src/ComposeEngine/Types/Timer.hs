@@ -21,12 +21,12 @@ data FrameCounter
       }
 
 newTimer :: (MonadIO m) => Word32 -> m LoopTimer
-newTimer rate = do
-  start <- fromIntegral <$> SDL.ticks
+newTimer rate' = do
+  start' <- fromIntegral <$> SDL.ticks
   return $ LoopTimer
-    { counter = FrameCounter start 0 0,
-      rate = rate,
-      current = start,
+    { counter = FrameCounter start' 0 0,
+      rate = rate',
+      current = start',
       elapsed = 0,
       lag = 0
     }

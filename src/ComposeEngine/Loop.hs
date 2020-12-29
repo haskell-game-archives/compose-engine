@@ -33,7 +33,7 @@ noOutput _ = return ()
 noRender :: (Monad m) => Render m s
 noRender = return ()
 
-startLoop :: (M.MonadIO m) => Timer.LoopTimer -> s -> LoopState m s r () -> m r
+startLoop :: (M.MonadIO m, MonadFail m) => Timer.LoopTimer -> s -> LoopState m s r () -> m r
 startLoop timer state loop = do
   eitherResult <- snd <$> M.execStateT loop (timer, Right state)
   case eitherResult of
@@ -54,8 +54,8 @@ timedLoop input update output render = do
   (timer, state) <- M.get
   case state of
     Left _ -> return ()
-    Right state -> do
-      M.lift $ M.runReaderT render (timer, state)
+    Right state' -> do
+      M.lift $ M.runReaderT render (timer, state')
       incrementFrame
       timedLoop input update output render
 
