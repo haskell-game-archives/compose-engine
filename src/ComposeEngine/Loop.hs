@@ -15,10 +15,10 @@ where
 
 import ComposeEngine.Types.Loop
 import qualified ComposeEngine.Types.Timer as Timer
+import qualified Control.Monad.Fail as Fail
 import qualified Control.Monad.Reader as M
 import qualified Control.Monad.State as M
 import qualified SDL
-import qualified Control.Monad.Fail as Fail
 
 type LoopState m s r = M.StateT (Timer.LoopTimer, Either r s) m
 
