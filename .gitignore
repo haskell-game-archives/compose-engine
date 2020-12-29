@@ -3,5 +3,4 @@ out/**
 replays/**
 .DS_Store
 **.iml
-**.lock
 dist-new*
