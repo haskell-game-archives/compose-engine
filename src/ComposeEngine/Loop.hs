@@ -18,6 +18,7 @@ import qualified ComposeEngine.Types.Timer as Timer
 import qualified Control.Monad.Reader as M
 import qualified Control.Monad.State as M
 import qualified SDL
+import qualified Control.Monad.Fail as Fail
 
 type LoopState m s r = M.StateT (Timer.LoopTimer, Either r s) m
 
@@ -33,12 +34,12 @@ noOutput _ = return ()
 noRender :: (Monad m) => Render m s
 noRender = return ()
 
-startLoop :: (M.MonadIO m, MonadFail m) => Timer.LoopTimer -> s -> LoopState m s r () -> m r
+startLoop :: (M.MonadIO m, Fail.MonadFail m) => Timer.LoopTimer -> s -> LoopState m s r () -> m r
 startLoop timer state loop = do
   eitherResult <- snd <$> M.execStateT loop (timer, Right state)
   case eitherResult of
     Left result -> return result
-    Right _ -> fail "returned state instead of result in startLoop"
+    Right _ -> Fail.fail "returned state instead of result in startLoop"
 
 timedLoop ::
   (M.MonadIO m) =>
