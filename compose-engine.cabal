@@ -1,0 +1,42 @@
+cabal-version:      2.4
+name:               compose-engine
+version:            0.1.0.0
+description:
+  Please see the README on GitHub at <https://github.com/morgenthum/compose-engine#readme>
+
+homepage:           https://github.com/morgenthum/compose-engine#readme
+bug-reports:        https://github.com/morgenthum/compose-engine/issues
+author:             Mario Morgenthum
+maintainer:         mario.morgenthum@gmail.com
+copyright:          2019 Mario Morgenthum
+license:            BSD-3-Clause
+license-file:       LICENSE
+build-type:         Simple
+tested-with:        GHC ==8.6.5 || ==8.8.4 || ==8.10.3
+extra-source-files:
+  ChangeLog.md
+  README.md
+
+source-repository head
+  type:     git
+  location: https://github.com/morgenthum/compose-engine
+
+library
+  hs-source-dirs:   src
+  build-depends:
+    , base  >=4.12 && <4.15
+    , lens  >=4.17 && <4.20
+    , mtl   ^>=2.2
+    , sdl2  >=2.4  && <2.6
+    , text  ^>=1.2
+
+  -- cabal-fmt: expand src
+  exposed-modules:
+    ComposeEngine.Loop
+    ComposeEngine.RenderContext
+    ComposeEngine.Types.Loop
+    ComposeEngine.Types.Timer
+
+  other-modules:    Paths_compose_engine
+  ghc-options:      -Wall
+  default-language: Haskell2010

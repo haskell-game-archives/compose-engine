@@ -15,6 +15,7 @@ where
 
 import ComposeEngine.Types.Loop
 import qualified ComposeEngine.Types.Timer as Timer
+import qualified Control.Monad.Fail as Fail
 import qualified Control.Monad.Reader as M
 import qualified Control.Monad.State as M
 import qualified SDL
@@ -33,12 +34,12 @@ noOutput _ = return ()
 noRender :: (Monad m) => Render m s
 noRender = return ()
 
-startLoop :: (M.MonadIO m) => Timer.LoopTimer -> s -> LoopState m s r () -> m r
+startLoop :: (M.MonadIO m, Fail.MonadFail m) => Timer.LoopTimer -> s -> LoopState m s r () -> m r
 startLoop timer state loop = do
   eitherResult <- snd <$> M.execStateT loop (timer, Right state)
   case eitherResult of
     Left result -> return result
-    Right _ -> fail "returned state instead of result in startLoop"
+    Right _ -> Fail.fail "returned state instead of result in startLoop"
 
 timedLoop ::
   (M.MonadIO m) =>
@@ -54,8 +55,8 @@ timedLoop input update output render = do
   (timer, state) <- M.get
   case state of
     Left _ -> return ()
-    Right state -> do
-      M.lift $ M.runReaderT render (timer, state)
+    Right state' -> do
+      M.lift $ M.runReaderT render (timer, state')
       incrementFrame
       timedLoop input update output render
 

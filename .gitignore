@@ -2,7 +2,5 @@
 out/**
 replays/**
 .DS_Store
-.stack-work/**
-**.cabal
 **.iml
-**.lock
+dist-new*

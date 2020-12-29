@@ -25,8 +25,8 @@ getUpdateTimer = gets fst
 getUpdateState :: UpdateState s r s
 getUpdateState = do
   eitherState <- gets snd
-  let Right state = eitherState
-  return state
+  let Right state' = eitherState
+  return state'
 
 modifyUpdateState :: (s -> s) -> UpdateState s r ()
 modifyUpdateState f = modify (\(timer, Right s) -> (timer, Right $ f s))
@@ -37,9 +37,9 @@ overUpdateState ::
   ASetter s2 s2 s s1 ->
   (t, Either r s2) ->
   (t, Either r s2)
-overUpdateState f from to (t, Right s) =
-  let (t', Right s') = execState f (t, Right $ view from s)
-   in (t', Right $ set to s' s)
+overUpdateState f from' to' (t, Right s) =
+  let (t', Right s') = execState f (t, Right $ view from' s)
+   in (t', Right $ set to' s' s)
 overUpdateState _ _ _ s = s
 
 putUpdateTimer :: LoopTimer -> UpdateState s r ()
@@ -48,9 +48,9 @@ putUpdateTimer timer = do
   put (timer, eitherState)
 
 putUpdateState :: s -> UpdateState s r ()
-putUpdateState state = do
+putUpdateState state' = do
   (timer, _) <- get
-  put (timer, Right state)
+  put (timer, Right state')
 
 putUpdateResult :: r -> UpdateState s r ()
 putUpdateResult result = do
